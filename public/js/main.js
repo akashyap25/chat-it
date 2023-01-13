@@ -1,6 +1,22 @@
 const chatForm= document.getElementById("chat-form");
 const chatMessages= document.querySelector(".chat-messages");
+const roomName = document.getElementById("room-name");
+const userList= document.getElementById("users");
+
+//get username and room 
+const {username, room}= Qs.parse(location.search,{
+    ignoreQueryPrefix:true
+});
 const socket= io();
+
+//join chatroom
+socket.emit("joinRoom", {username, room});
+
+//Get room and users
+socket.on('roomUsers', ({room, users}) =>{
+    outputRoomName(room);
+    outputUsers(users);
+});
 
 // passing message to server
 socket.on('message', message =>{
@@ -12,7 +28,6 @@ socket.on('message', message =>{
 });
 
 //message submit
-
 chatForm.addEventListener("submit", e=>{
 e.preventDefault();
 
@@ -28,19 +43,38 @@ e.target.elements.msg.focus();
 
 });
 
+
+
+
 // output message to DOM
 
 function outputMessage(message){
     const div= document.createElement("div");
     div.classList.add("message");
-    const d= new Date();
-    let hour= d.getHours();
-    let minutes= d.getMinutes();
-    div.innerHTML=`<p class="meta">Brad <span>${hour+':'+minutes}</span></p>
+    div.innerHTML=`<p class="meta">${message.username} <span>${message.time}</span></p>
     <p class="text">
-        ${message}
+        ${message.text}
     </p>`;
     document.querySelector(".chat-messages").appendChild(div);
 }
+
+function outputRoomName(room){
+  roomName.innerText=room;
+}
+
+function outputUsers(users){
+    userList.innerHTML=`${users.map(user => `<li>${user.username}</li>`).join('')}`;
+  }
+
+  //Prompt the user before leave chat room
+document.getElementById('leave-btn').addEventListener('click', () => {
+    const leaveRoom = confirm('Are you sure you want to leave the chatroom?');
+    if (leaveRoom) {
+      window.location = '../index.html';
+    } else {
+    }
+  });
+
+
 
 //29:03
