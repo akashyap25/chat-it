@@ -42,8 +42,9 @@ const client = new MongoClient(url);
 mongoose.set('strictQuery', true);
 
 const clientSchema = new mongoose.Schema({
-  id:Number,
-  name:String
+  name:String,
+  username:String,
+  password:String,
 });
 clientSchema.plugin(findOrCreate);
 const messageSchema = new mongoose.Schema({
