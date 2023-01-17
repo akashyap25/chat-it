@@ -2,9 +2,11 @@ const chatForm= document.getElementById("chat-form");
 const chatMessages= document.querySelector(".chat-messages");
 const roomName = document.getElementById("room-name");
 const userList= document.getElementById("users");
+var qs = require('qs');
+var assert = require('assert');
 
 //get username and room 
-const {email, password, username, room}= Qs.parse(location.search,{
+const {email, password, username, room}= qs.parse(location.search,{
     ignoreQueryPrefix:true
 });
 

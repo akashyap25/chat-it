@@ -17,7 +17,8 @@ const mongoose = require("mongoose");
 const findOrCreate = require("mongoose-findorcreate");
 const bodyParser= require("body-parser");
 const moment = require('moment');
-
+var qs = require('qs');
+var assert = require('assert');
 //login-authentication
 
 const session = require("express-session");
@@ -25,18 +26,20 @@ const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-//get username and room 
-const {email, password, username, room}= Qs.parse(location.search,{
-  ignoreQueryPrefix:true
-});
+
 
 
 const app = express();
 const server= http.createServer(app);
 const io= socketio(server);
+//get username and room 
+
 
 const PORT = 3000 || process.env.port
 app.use(express.static('public'));
+app.use(bodyParser.urlencoded({
+  extended:true
+}));
 
 app.set('view engine', 'ejs');
 
@@ -67,10 +70,10 @@ const client = new MongoClient(url);
 mongoose.set('strictQuery', true);
 
 const clientSchema = new mongoose.Schema({
-  name:String,
-  username:String,
-  password:String,
-  googleId: String
+    name:String,
+    email:String,
+    password:String,
+    googleId: String
 });
 
 const messageSchema = new mongoose.Schema({
@@ -111,7 +114,7 @@ passport.use(new GoogleStrategy({
 function(accessToken, refreshToken, profile, cb) {
   console.log(profile);
 
-  Client.findOrCreate({ googleId: profile.id }, function (err, client) {
+  Client.findOrCreate({ googleId: profile.id,email:profile.email, name:profile.name }, function (err, client) {
     return cb(err, client);
   });
 }
@@ -158,7 +161,7 @@ app.get("/login", function(req,res){
   });
 
   app.post("/register", function(req,res){
-    Client.register({username:username}, password,email, function(err,client){
+    Client.register({username:req.body.username}, req.body.password,req.body.email, function(err,client){
        if(err){
         console.log(err);
         res.redirect("/register");
@@ -174,13 +177,11 @@ app.get("/login", function(req,res){
 
   app.post("/login", function(req,res){
     
-    const client= new Client({
-      email:email,
-     username: username,
-      password: password
-    });
-    // const col = db.collection("clients");
-    //   col.insertOne(client);                            
+     
+    Client.findOrCreate({  email:req.body.email,
+       password: req.body.password }, function (err, client) {
+      return cb(err, client);
+    });                         
 
     req.login(client, function(err,){
        if(err){
