@@ -4,9 +4,10 @@ const roomName = document.getElementById("room-name");
 const userList= document.getElementById("users");
 
 //get username and room 
-const {name, password, username, room}= Qs.parse(location.search,{
+const {email, password, username, room}= Qs.parse(location.search,{
     ignoreQueryPrefix:true
 });
+
 const socket= io();
 
 //join chatroom
@@ -70,7 +71,7 @@ function outputUsers(users){
 document.getElementById('leave-btn').addEventListener('click', () => {
     const leaveRoom = confirm('Are you sure you want to leave the chatroom?');
     if (leaveRoom) {
-      window.location = '../index.html';
+      window.location = '../login.html';
     } else {
     }
   });

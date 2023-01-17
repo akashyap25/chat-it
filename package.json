@@ -9,12 +9,20 @@
   "author": "Anurag kashyap",
   "license": "ISC",
   "dependencies": {
+    "body": "^5.1.0",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
     "express": "^4.18.2",
+    "express-session": "^1.17.3",
     "moment": "^2.29.4",
     "mongodb": "^4.13.0",
     "mongoose": "^6.8.3",
     "mongoose-findorcreate": "^3.0.0",
     "nodemon": "^2.0.20",
+    "parser": "^0.1.4",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local-mongoose": "^7.1.2",
     "socket.io": "^4.5.4"
   }
 }
