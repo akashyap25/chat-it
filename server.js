@@ -25,6 +25,10 @@ const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
+//get username and room 
+const {email, password, username, room}= Qs.parse(location.search,{
+  ignoreQueryPrefix:true
+});
 
 
 const app = express();
@@ -36,7 +40,7 @@ app.use(express.static('public'));
 
 app.set('view engine', 'ejs');
 
-//login-authentication
+// login-authentication
 app.use(session({
   secret: process.env.SECRET,
   resave:false,
@@ -101,7 +105,7 @@ passport.deserializeUser(function(client, cb) {
 passport.use(new GoogleStrategy({
   clientID: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
-  callbackURL: "http://localhost:3000/auth/google/secrets",
+  callbackURL: "http://localhost:3000/auth/google/chat",
   userProfileURL:"https://www.googleapis.com/oauth2/v3/userinfo"
 },
 function(accessToken, refreshToken, profile, cb) {
@@ -118,13 +122,13 @@ app.get("/", function(req,res){
 });
 
 app.get('/auth/google',
-  passport.authenticate('google', { scope: ["profile"] }));
+  passport.authenticate('google', { scope: ["profile","email"] }));
 
-  app.get('/auth/google/secrets',
+  app.get('/auth/google/chat',
   passport.authenticate('google', { failureRedirect: '/login' }),
   function(req, res) {
     // Successful authentication, redirect home.
-    res.redirect('/chat');
+    res.redirect('chat');
   });
 
 app.get("/login", function(req,res){
@@ -135,6 +139,61 @@ app.get("/login", function(req,res){
     res.render("register");
   });
 
+  app.get("/chat", function(req,res){
+    if (req.isAuthenticated()){
+      res.render("chat");
+    } else {
+      res.redirect("/login");
+    }
+  });
+
+  app.get("/logout", function(req,res){
+    req.logout(function(err){
+      if(err){
+        console.log(err);
+      } else {
+        res.redirect("/");
+      }
+    });
+  });
+
+  app.post("/register", function(req,res){
+    Client.register({username:username}, password,email, function(err,client){
+       if(err){
+        console.log(err);
+        res.redirect("/register");
+       } else {
+        passport.authenticate("local")(req,res, function(){
+            res.redirect("/chat");
+        });
+       }
+    });
+   
+  });
+
+
+  app.post("/login", function(req,res){
+    
+    const client= new Client({
+      email:email,
+     username: username,
+      password: password
+    });
+    // const col = db.collection("clients");
+    //   col.insertOne(client);                            
+
+    req.login(client, function(err,){
+       if(err){
+        console.log(err);
+       } else {
+        passport.authenticate("local")(req, res, function(){
+          res.redirect("/chat");
+        })
+       }
+    });
+                
+  });
+
 
 
 const botName='chat-it bot';
@@ -142,11 +201,6 @@ const botName='chat-it bot';
 io.on('connection', socket =>{
   socket.on('joinRoom', ({username, room})=>{
     const user = userJoin(socket.id, username, room);
-    const client= new Client({
-      name:user.username
-     });
-     const col = db.collection("clients");
-      col.insertOne(client);
       socket.join(user.room);
 
      // welcome a user 
