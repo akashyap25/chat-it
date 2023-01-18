@@ -179,8 +179,9 @@ app.get("/login", function(req,res){
     
      
     Client.findOrCreate({  email:req.body.email,
-       password: req.body.password }, function (err, client) {
-      return cb(err, client);
+       password: req.body.password }, function (err, client,cb) {
+      // return cb(err, client);
+      console.log(err);
     });                         
 
     req.login(client, function(err,){
