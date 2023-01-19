@@ -114,7 +114,7 @@ passport.use(new GoogleStrategy({
 function(accessToken, refreshToken, profile, cb) {
   console.log(profile);
 
-  Client.findOrCreate({ googleId: profile.id,email:profile.email, name:profile.name }, function (err, client) {
+  Client.findOrCreate({ googleId: profile.id }, function (err, client) {
     return cb(err, client);
   });
 }
@@ -125,13 +125,13 @@ app.get("/", function(req,res){
 });
 
 app.get('/auth/google',
-  passport.authenticate('google', { scope: ["profile","email"] }));
+  passport.authenticate('google', { scope: ["profile"] }));
 
   app.get('/auth/google/chat',
   passport.authenticate('google', { failureRedirect: '/login' }),
   function(req, res) {
     // Successful authentication, redirect home.
-    res.redirect('chat');
+    res.redirect('/chat');
   });
 
 app.get("/login", function(req,res){
@@ -161,7 +161,7 @@ app.get("/login", function(req,res){
   });
 
   app.post("/register", function(req,res){
-    Client.register({username:req.body.username}, req.body.password,req.body.email, function(err,client){
+    Client.register({username:req.body.username}, req.body.password, function(err,client){
        if(err){
         console.log(err);
         res.redirect("/register");
@@ -178,13 +178,17 @@ app.get("/login", function(req,res){
   app.post("/login", function(req,res){
     
      
-    Client.findOrCreate({  email:req.body.email,
-       password: req.body.password }, function (err, client,cb) {
-      // return cb(err, client);
-      console.log(err);
-    });                         
+    // Client.findOrCreate({  email:req.body.email,
+    //    password: req.body.password }, function (err, client,cb) {
+    //   // return cb(err, client);
+    //   console.log(err);
+    // });    
+    const user= new User({
+      username: req.body.username,
+       password: req.body.password
+     });                      
 
-    req.login(client, function(err,){
+    req.login(user, function(err,){
        if(err){
         console.log(err);
        } else {
