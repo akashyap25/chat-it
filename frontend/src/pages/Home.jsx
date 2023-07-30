@@ -2,18 +2,18 @@ import React, { useState, useEffect, useContext } from 'react';
 import { io } from 'socket.io-client';
 import ChatBox from '../components/ChatBox';
 import SideBar from '../components/SideBar';
-import AuthContext from '../contexts/AuthContext';
-import ChatContext from '../contexts/ChatContext';
-import MessageContext from '../contexts/MessageContext';
+import AuthController from '../contexts/AuthContext';
+import ChatController from '../contexts/ChatContext';
+import MessageController from '../contexts/MessageContext';
 import { User } from '../types';
 
 function Home() {
     const [display, setDisplay] = useState(true);
     const socket = React.useRef(null);
-    const { setMessages } = useContext(MessageContext);
-    const { render } = useContext(ChatContext);
+    const { setMessages } = useContext(MessageController);
+    const { render } = useContext(ChatController);
     const [onlineUser, setOnlineUser] = useState([]);
-    const { state } = useContext(AuthContext);
+    const { state } = useContext(AuthController);
     const { user } = state;
     
     // Ensure user is not null before proceeding

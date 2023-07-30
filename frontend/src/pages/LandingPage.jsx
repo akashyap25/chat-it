@@ -59,7 +59,7 @@ function LandingPage() {
             <div className='w-3/4 m-auto h-[2px] bg-white'></div>
 
             <div className='flex justify-center items-center my-10 text-base text-center sm:text-lg'>
-                <p>Copyright &copy; Ghasty, 2023. All rights reserved. </p>
+                <p>Copyright &copy; Anurag, 2023. All rights reserved. </p>
             </div>
         </div>
     );

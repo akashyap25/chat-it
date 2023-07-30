@@ -1,29 +1,31 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
-import { AuthControllerProvider } from './controllers/AuthController';
-import { ChatControllerProvider } from './controllers/ChatController';
-import { FriendControllerProvider } from './controllers/FriendController';
-import { MessageControllerProvider } from './controllers/MessageController';
-import { SocketControllerProvider } from './controllers/SocketController';
 import './index.css';
+import { AuthContextProvider } from './contexts/AuthContext';
+import { ChatContextProvider } from './contexts/ChatContext';
+import { FriendContextProvider } from './contexts/FriendContext';
+import { MessageContextProvider } from './contexts/MessageContext';
+import { SocketContextProvider } from './contexts/SocketContext';
 
-ReactDOM.render(
-  <BrowserRouter>
-    <AuthControllerProvider>
-      <FriendControllerProvider>
-        <ChatControllerProvider>
-          <MessageControllerProvider>
-            <SocketControllerProvider>
-              <React.StrictMode>
+const rootElement = document.getElementById('root');
+const root = ReactDOM.createRoot(rootElement);
+
+root.render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <AuthContextProvider>
+        <FriendContextProvider>
+          <ChatContextProvider>
+            <MessageContextProvider>
+              <SocketContextProvider>
                 <App />
-              </React.StrictMode>
-            </SocketControllerProvider>
-          </MessageControllerProvider>
-        </ChatControllerProvider>
-      </FriendControllerProvider>
-    </AuthControllerProvider>
-  </BrowserRouter>,
-  document.getElementById('root')
+              </SocketContextProvider>
+            </MessageContextProvider>
+          </ChatContextProvider>
+        </FriendContextProvider>
+      </AuthContextProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );

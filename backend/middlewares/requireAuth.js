@@ -1,6 +1,7 @@
-"use strict";
+
 const jwt = require("jsonwebtoken");
 const UserModel = require("../models/userModel");
+const dotenv = require("dotenv").config();
 
 async function requireAuth(req, res, next) {
   const { authorization } = req.headers;

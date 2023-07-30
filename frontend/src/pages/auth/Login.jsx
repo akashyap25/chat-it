@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import login from '../../assets/loginchat.png';
 import NavBar from '../../components/NavBar';
-import { AiOutlineUser, RiLockPasswordFill } from 'react-icons/all';
+import { AiOutlineUser, AiOutlineLock } from "react-icons/ai";
+import { RiLockPasswordFill } from "react-icons/ri";
 import AuthContext from '../../contexts/AuthContext';
 import { Type } from '../../types';
 
@@ -28,7 +29,7 @@ function Login() {
         e.preventDefault();
         setLoading(true);
 
-        const res = await fetch(`https://hawky.onrender.com/api/user/login`, {
+        const res = await fetch(`http://localhost:5000/api/user/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

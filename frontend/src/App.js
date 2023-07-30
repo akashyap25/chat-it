@@ -1,7 +1,6 @@
-import { useContext, lazy, Suspense } from "react"
-import { Route, Routes, Navigate } from "react-router-dom"
-
-import AuthContext from "./controllers/AuthController"
+import React, { useContext, lazy, Suspense } from "react";
+import { Route, Routes, Navigate } from "react-router-dom";
+import AuthContext from "./contexts/AuthContext";
 import LandingPage from "./pages/LandingPage";
 import Loading from "./components/Loading";
 
@@ -22,7 +21,12 @@ function App() {
 
         <Route path="/home" element={
           <Suspense fallback={<Loading />}>
-            { user ? <Home /> : <Navigate to="/login" /> }
+            <form onSubmit={() => {
+              // Clear the form
+              this.resetForm();
+            }}>
+              { user ? <Home /> : <Navigate to="/login" /> }
+            </form>
           </Suspense> 
         } />
 

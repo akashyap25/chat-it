@@ -9,7 +9,7 @@ const authReducer = (state, action) => {
             return {
                 user: null
             };
-        case Type.LOGIN:
+        case Type.login:
             return {
                 user: action.payload
             };
@@ -28,7 +28,7 @@ export const AuthContextProvider = ({ children }) => {
     useEffect(() => {
         const user = localStorage.getItem("user");
         if (user) {
-            dispatch({ type: Type.LOGIN, payload: JSON.parse(user) });
+            dispatch({ type: Type.login, payload: JSON.parse(user) });
         }
     }, []);
 

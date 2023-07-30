@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom'
 import register from "../../assets/registerchat.png";
 import NavBar from '../../components/NavBar';
 import avatar from "../../assets/addAvatar.png";
-import { AiOutlineUser, RiLockPasswordFill, MdOutlineAlternateEmail } from "react-icons/all";
+import { AiOutlineUser } from "react-icons/ai";
+import { RiLockPasswordFill } from "react-icons/ri";
+import { MdOutlineAlternateEmail } from "react-icons/md";
 import AuthContext from '../../contexts/AuthContext';
 
 function convertToBase64(file) {
