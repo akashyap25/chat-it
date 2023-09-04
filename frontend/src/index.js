@@ -1,31 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import './index.css';
-import { AuthContextProvider } from './contexts/AuthContext';
-import { ChatContextProvider } from './contexts/ChatContext';
-import { FriendContextProvider } from './contexts/FriendContext';
-import { MessageContextProvider } from './contexts/MessageContext';
-import { SocketContextProvider } from './contexts/SocketContext';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { ChakraProvider } from "@chakra-ui/react";
+import ChatProvider from "./Context/ChatProvider";
+import { BrowserRouter } from "react-router-dom";
 
-const rootElement = document.getElementById('root');
-const root = ReactDOM.createRoot(rootElement);
-
-root.render(
-  <React.StrictMode>
+ReactDOM.render(
+  <ChakraProvider>
     <BrowserRouter>
-      <AuthContextProvider>
-        <FriendContextProvider>
-          <ChatContextProvider>
-            <MessageContextProvider>
-              <SocketContextProvider>
-                <App />
-              </SocketContextProvider>
-            </MessageContextProvider>
-          </ChatContextProvider>
-        </FriendContextProvider>
-      </AuthContextProvider>
+      <ChatProvider>
+        <App />
+      </ChatProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  </ChakraProvider>,
+  document.getElementById("root")
 );
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();

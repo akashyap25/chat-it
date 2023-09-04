@@ -1,49 +1,45 @@
-import React, { useContext, lazy, Suspense } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
-import AuthContext from "./contexts/AuthContext";
-import LandingPage from "./pages/LandingPage";
-import Loading from "./components/Loading";
+import React, { useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  useHistory,
+} from "react-router-dom";
+import Loader from "./components/layouts/Loader";
 
-function App() {
+const Chatpage = React.lazy(() => import("./Pages/Chatpage"));
+const Signup = React.lazy(() => import("./components/Authentication/Signup"));
+const Login = React.lazy(() => import("./components/Authentication/Login"));
+const ForgetPassowrd = React.lazy(() =>
+  import("./components/Authentication/ForgotPassword")
+);
 
-  const { state } = useContext(AuthContext);
-
-  const { user } = state;
-
-  const Home = lazy(() => import("./pages/Home"));
-  const Login = lazy(() => import("./pages/auth/Login"));
-  const Register = lazy(() => import("./pages/auth/Register"));
+function App() { 
+  const history = useHistory(); 
+  const user = JSON.parse(localStorage.getItem("userInfo"));
+ 
+  useEffect(() => {
+    if (!user) {
+      history.push("/");
+    } else {
+      history.push("/chats");
+    }
+  }, [history, user]);
 
   return (
-    <div>
-      <Routes>
-        <Route index path="/" element={!user ? <LandingPage /> : <Navigate to="/home" />} />
-
-        <Route path="/home" element={
-          <Suspense fallback={<Loading />}>
-            <form onSubmit={() => {
-              // Clear the form
-              this.resetForm();
-            }}>
-              { user ? <Home /> : <Navigate to="/login" /> }
-            </form>
-          </Suspense> 
-        } />
-
-        <Route path="/login" element={
-          <Suspense fallback={<Loading />}>
-            { !user ? <Login /> : <Navigate to="/home" /> }
-          </Suspense> 
-        } />
-
-        <Route path="/register" element={
-          <Suspense fallback={<Loading />}>
-            { !user ? <Register /> : <Navigate to="/home" /> }
-          </Suspense> 
-        } />
-      </Routes>
+    <div className="App">
+      <Router>
+        <React.Suspense fallback={<Loader />}>
+          <Switch>
+            <Route exact path="/signup" component={Signup} />
+            <Route exact path="/" component={Login} />
+            <Route exact path="/forgot/password" component={ForgetPassowrd} />
+            <Route exact path="/chats" component={Chatpage} />
+          </Switch>
+        </React.Suspense>
+      </Router>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
