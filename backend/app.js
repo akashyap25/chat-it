@@ -22,6 +22,9 @@ app.use(fileUpload());
 app.use(errorMiddleware);
 
 
+
+
+
 //this is for logging the incoming request
 // app.use((req, res, next) => {
 //   console.log(`Incoming request: ${req.method} ${req.originalUrl}`);
@@ -41,18 +44,18 @@ app.use(cors());
 
 // -----deployement code-----
 
-const __dirname1 = path.resolve();
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname1, "/frontend/build")));
+// const __dirname1 = path.resolve();
+// if (process.env.NODE_ENV === "production") {
+//   app.use(express.static(path.join(__dirname1, "/views")));
 
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname1, "frontend", "build", "index.html"))
-  );
-} else {
-  app.get("/", (req, res) => {
-    res.send("API is running..");
-  });
-}
+//   app.get("*", (req, res) =>
+//     res.sendFile(path.resolve(__dirname1, "views", "index.html"))
+//   );
+// } else {
+//   app.get("/", (req, res) => {
+//     res.send("API is running..");
+//   });
+// }
 
 // connect to DB
 connectDB();
