@@ -39,7 +39,7 @@ function App() {
         </React.Suspense>
       </Router>
     </div>
-  );
+  ); 
 }
 
 export default App;
